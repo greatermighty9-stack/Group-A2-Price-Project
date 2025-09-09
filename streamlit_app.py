@@ -83,6 +83,7 @@ def get_unique_sorted_values(column):
     except:
         return []
 
+
 st.title("Group A2 Laptop Price Prediction Project")
 st.write("Choose your desired Laptop features to predict the price")
 
@@ -102,11 +103,10 @@ user_input = [Company, Product, TypeName, Cpu, Ram, Memory, Gpu, OpSys]
 if st.button("Predict price"):
     try:
         predicted_price = get_price(user_input)[0]
-        # Checks for the negative price predictions and handle them
-        if predicted_price < 0:
-            st.write("The predicted price appears to be negative, which may indicate an issue with the input data.")
-        else:
-            text = f"The estimated price is €{predicted_price:,.2f}"
-            st.write(text)
+        
+        # This code will now display the predicted price regardless of whether it is positive or negative.
+        text = f"The estimated price is €{predicted_price:,.2f}"
+        st.write(text)
+        
     except Exception as e:
         st.error(f"Error making prediction: {e}")
