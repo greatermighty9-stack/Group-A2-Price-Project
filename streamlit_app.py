@@ -1,4 +1,15 @@
-import numpy as np
+# Group A2 Members 
+#1. Desmond Edet 22/EG/CO/1756
+#2. Austin Gezai 22/EG/CO/1686
+#3. Mbikan Gracious 23/EG/CO/093
+#4. Divine Ephraim 23/EG/CO/033
+#5. Gloriouslife Bassey 22/EG/CO/1763
+#6. Prince Aniedi 22/EG/CO/1732
+#7. Jesse king 22/EG/CO/1660
+#8. Goodness Akpan 22/EG/CO/1704
+#9. Thomas Abasiodiong 23/EG/CO/045
+#10. Michael Samuel 23/EG/CO/127
+#11. Covenant Raphael 23/EG/CO/061import numpy as np
 import pandas as pd
 from sklearn.pipeline import Pipeline
 from sklearn.linear_model import LinearRegression
