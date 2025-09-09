@@ -10,23 +10,29 @@ import os
 
 # To define the dataset 
 try:
-    df = pd.read_csv("cleaned_price_datsaset.csv")
+    df = pd.read_csv("cleaned_price_dataset.csv")
+except Exception as e:
+    st.error(f"Error loading dataset: {e}")
+    st.stop()
 
 # Dropping of any unnamed columns and stripping the whitespace from column names
 df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
 df.columns = df.columns.str.strip()
 
-# Creating and Training model 
-x = df.drop(columns =["Price", "Inches", "Weight"], axis=1) 
-y = df["Price"] # target variable
+# Fix the column name issue (ï»¿laptop_ID is likely a BOM issue)
+df = df.rename(columns={df.columns[0]: "laptop_ID"})
 
-x_train, x_test, y_train, y_test = split(x, y, test_size=5, random_state=5)
+# Creating and Training model 
+x = df.drop(columns=["Price_euros", "laptop_ID", "Inches", "Weight", "ScreenResolution"], axis=1) 
+y = df["Price_euros"]  # target variable
+
+x_train, x_test, y_train, y_test = split(x, y, test_size=0.2, random_state=5)
 
 # Identify the categorical and the numerical columns
 categorical_columns = x.select_dtypes(include=['object']).columns
 numerical_columns = x.select_dtypes(exclude=['object']).columns
 
-#Transforming  Encode categorical + scale numeric
+# Transforming Encode categorical + scale numeric
 preprocessor = ColumnTransformer(
     transformers=[
         ('category', OneHotEncoder(handle_unknown='ignore'), categorical_columns),
@@ -62,27 +68,26 @@ def get_price(user_input):
 
 
 st.title("Group A2 Laptop Price Prediction Project")
-st.write("Choose your desires Laptop features to predict the price")
+st.write("Choose your desired Laptop features to predict the price")
 
-# Creatng a selectting box to get user input
-
+# Creating a selection box to get user input
 Company = st.selectbox("Company", sorted(list(set(x["Company"].tolist()))))
 Product = st.selectbox("Product", sorted(list(set(x["Product"].tolist()))))
 TypeName = st.selectbox("Type", sorted(list(set(x["TypeName"].tolist()))))
-ScreenResolution = st.selectbox("Screen Resolution", sorted(list(set(x["ScreenResolution"].tolist()))))
 Cpu = st.selectbox("CPU", sorted(list(set(x["Cpu"].tolist()))))
 Ram = st.selectbox("RAM", sorted(list(set(x["Ram"].tolist()))))
 Memory = st.selectbox("Memory", sorted(list(set(x["Memory"].tolist()))))
 Gpu = st.selectbox("GPU", sorted(list(set(x["Gpu"].tolist()))))
-Operating_System = st.selectbox("Operating_System", sorted(list(set(x["Operating_System"].tolist()))))
+OpSys = st.selectbox("Operating System", sorted(list(set(x["OpSys"].tolist()))))
 
-user_input = [Company, Product, TypeName, ScreenResolution, Cpu, Ram, Memory, Gpu, Operating_System]
+user_input = [Company, Product, TypeName, Cpu, Ram, Memory, Gpu, OpSys]
 
 # shows the price of the device
 if st.button("Predict price"):
     predicted_price = get_price(user_input)[0]
-    # Checks for the n egative price predictions and handle them
+    # Checks for the negative price predictions and handle them
     if predicted_price < 0:
+        st.write("The predicted price appears to be negative, which may indicate an issue with the input data.")
     else:
-        text = f"The estimated price is £{predicted_price:,.2f}"
+        text = f"The estimated price is €{predicted_price:,.2f}"
         st.write(text)
