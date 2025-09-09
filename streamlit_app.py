@@ -12,9 +12,18 @@ import os
 try:
     df = pd.read_csv("cleaned_prices_dataset.csv")
 
-# Dropping of any unnamed columns and stripping the whitespace from column names
-df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
-df.columns = df.columns.str.strip()  # Fixed: Added closing parenthesis
+    # Dropping of any unnamed columns and stripping the whitespace from column names
+    df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
+    df.columns = df.columns.str.strip()  # Fixed: Added closing parenthesis
+    
+# Added the 'except' block to properly handle the 'try' statement
+except FileNotFoundError:
+    st.error("The file 'cleaned_prices_dataset.csv' was not found.")
+    st.stop()
+except Exception as e:
+    st.error(f"An error occurred: {e}")
+    st.stop()
+
 
 # Creating and Training model 
 x = df.drop(columns=["Price", "laptop_ID", "Inches", "Weight", "ScreenResolution"], axis=1) 
@@ -71,7 +80,6 @@ def get_unique_sorted_values(column):
     except:
         return []
 
-
 st.title("Group A2 Laptop Price Prediction Project")
 st.write("Choose your desired Laptop features to predict the price")
 
@@ -99,3 +107,4 @@ if st.button("Predict price"):
             st.write(text)
     except Exception as e:
         st.error(f"Error making prediction: {e}")
+        
