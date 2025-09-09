@@ -14,9 +14,8 @@ try:
 
     # Dropping of any unnamed columns and stripping the whitespace from column names
     df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
-    df.columns = df.columns.str.strip()  # Fixed: Added closing parenthesis
+    df.columns = df.columns.str.strip()
     
-# Added the 'except' block to properly handle the 'try' statement
 except FileNotFoundError:
     st.error("The file 'cleaned_prices_dataset.csv' was not found.")
     st.stop()
@@ -24,9 +23,13 @@ except Exception as e:
     st.error(f"An error occurred: {e}")
     st.stop()
 
-
 # Creating and Training model 
-x = df.drop(columns=["Price", "laptop_ID", "Inches", "Weight", "ScreenResolution"], axis=1) 
+columns_to_drop = ["Price", "laptop_ID", "Inches", "Weight", "ScreenResolution"]
+# Find the columns that exist in the DataFrame
+existing_columns_to_drop = [col for col in columns_to_drop if col in df.columns]
+
+# Drop only the existing columns
+x = df.drop(columns=existing_columns_to_drop, axis=1) 
 y = df["Price"]  # target variable
 
 x_train, x_test, y_train, y_test = split(x, y, test_size=0.2, random_state=5)
@@ -107,4 +110,3 @@ if st.button("Predict price"):
             st.write(text)
     except Exception as e:
         st.error(f"Error making prediction: {e}")
-        
