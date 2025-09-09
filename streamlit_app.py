@@ -10,18 +10,11 @@ import os
 
 # To define the dataset 
 try:
-    df = pd.read_csv("cleaned_price_dataset.csv")
-except Exception as e:
-    st.error(f"Error loading dataset: {e}")
-    st.stop()
+    df = pd.read_csv("cleaned_prices_dataset.csv")
 
 # Dropping of any unnamed columns and stripping the whitespace from column names
 df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
-df.columns = df.columns.str.strip()
-
-# Fix the column name issue (ï»¿laptop_ID is likely a BOM issue)
-if df.columns[0].startswith('ï»¿'):
-    df = df.rename(columns={df.columns[0]: "laptop_ID"})
+df.columns = df.columns.str.strip)
 
 # Creating and Training model 
 x = df.drop(columns=["Price_euros", "laptop_ID", "Inches", "Weight", "ScreenResolution"], axis=1) 
