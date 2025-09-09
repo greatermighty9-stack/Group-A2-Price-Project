@@ -14,11 +14,11 @@ try:
 
 # Dropping of any unnamed columns and stripping the whitespace from column names
 df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
-df.columns = df.columns.str.strip)
+df.columns = df.columns.str.strip()  # Fixed: Added closing parenthesis
 
 # Creating and Training model 
-x = df.drop(columns=["Price_euros", "laptop_ID", "Inches", "Weight", "ScreenResolution"], axis=1) 
-y = df["Price_euros"]  # target variable
+x = df.drop(columns=["Price", "laptop_ID", "Inches", "Weight", "ScreenResolution"], axis=1) 
+y = df["Price"]  # target variable
 
 x_train, x_test, y_train, y_test = split(x, y, test_size=0.2, random_state=5)
 
@@ -83,7 +83,7 @@ Cpu = st.selectbox("CPU", get_unique_sorted_values(x["Cpu"]))
 Ram = st.selectbox("RAM", get_unique_sorted_values(x["Ram"]))
 Memory = st.selectbox("Memory", get_unique_sorted_values(x["Memory"]))
 Gpu = st.selectbox("GPU", get_unique_sorted_values(x["Gpu"]))
-OpSys = st.selectbox("Operating System", get_unique_sorted_values(x["OpSys"]))
+OpSys = st.selectbox("Operating System", get_unique_sorted_values(x["Operating_System"]))
 
 user_input = [Company, Product, TypeName, Cpu, Ram, Memory, Gpu, OpSys]
 
