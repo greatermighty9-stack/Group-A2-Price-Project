@@ -50,6 +50,23 @@ model = Pipeline(steps=[
 # the train 
 model.fit(x_train, y_train)
 
+# The function to predict laptop price of the user
+def get_price(user_input):
+    """
+    Predicts the laptop price based on user input.
+    The function creates a DataFrame from the input and passes it directly
+    to the trained pipeline for prediction.
+    """
+    # Creating the DataFrame from the user's input list, using the original
+    # training columns for the headers.
+    user_data_df = pd.DataFrame([user_input], columns=x.columns)
+  
+    # The pipeline will handle both the preprocessing
+    # and the prediction in one step.
+    predicted_price = model.predict(user_data_df)
+  
+    return predicted_price
+
 # Helper function to safely get unique values for dropdowns
 def get_unique_sorted_values(column):
     try:
